@@ -1,0 +1,92 @@
+:root{
+    --body-bg: rgba(127,252,212, 0.1) ;
+    --text-bg:orange;
+    --box1-bg:#b8860B;
+    --box2-bg:#DC143c;
+}
+*{
+    margin: 0;
+    padding: 0;
+    outline: none;
+    box-sizing: border-box;
+}
+body{
+    background-color: var(--body-bg)!important;
+  
+}
+
+/* registration   style.................................................................. */
+
+#cont{
+margin-left: 25%;
+
+
+    
+}
+#cont input{
+    padding: 10px;
+   
+}
+#cont label{
+    padding: 10px;
+    margin: 10px;
+    /* color: var(--text-bg); */
+    font-size: x-large;
+}
+.form .card-header{
+    /* background-color: var(--box1-bg); */
+    color: var(--box1-bg);
+}
+.form{
+    background-color: var(--body-bg);
+}
+.form  label,input{
+
+  padding: 10px;
+}
+.form  input{
+
+  padding: 10px;
+}
+.form .btn{
+    padding: 10px;
+    width:30%;
+    background-color: var(--box1-bg) ;
+    font-size: larger;
+    color: white;
+    cursor: pointer;
+
+}
+
+
+/* registration skills  style..................................................................  end */
+#vendorSection form .row{
+    padding: 10px;
+    margin: 10px;
+}
+#vendorSection form .row textarea{
+    padding: 10px;
+    margin: 10px;
+}
+#vendorSection form  .book-section {
+    padding: 10px;
+    margin: 10px;
+}
+#vendorSection form  .book-section button{
+    padding: 10px;
+    margin: 10px;
+}
+#vendorSection form  .book-section .btn-1{
+   background-color: #b8860B;
+   color: white;
+}
+#vendorSection form  .book-section .btn-2{
+   background-color:var(--box2-bg);
+   color: white;
+}
+#vendorSection #bio{
+    color: var(--text-bg);
+}
+#vendorSection {
+ margin-top: 10rem;
+}

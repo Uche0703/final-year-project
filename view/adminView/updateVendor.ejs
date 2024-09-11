@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Vendor Page</title>
+    <link rel="stylesheet" href="/css/skill.css">
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/56adb67a5b.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container"><h2 id="bio">Vendor Bio Data</h2></div>
+    <form id="updateVendorForm" action="/admin/update/booked/vendor/<%= vendor._id %>" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="_method" value="PUT"> <!-- Hidden input to simulate PUT request -->
+        <div class="container wrapp" id="vendorSection">
+            <div class="container text-center">
+                <% if (vendor && vendor.vendorRef && vendor.vendorRef.profileImage && vendor.vendorRef.imageType) { %>
+                    <img src="data:<%= vendor.vendorRef.imageType %>;base64,<%= vendor.vendorRef.profileImage %>" alt="Profile Image" style="width: 200px; height: 200px; border-radius: 10px;">
+                    <input type="hidden" name="profileImage" value="<%= vendor.vendorRef.profileImage %>">
+                    <input type="hidden" name="imageType" value="<%= vendor.vendorRef.imageType %>">
+                <% } else { %>
+                    <p>No image available</p>
+                <% } %>
+            </div>
+
+            <div class="container">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="first_name" class="form-label">First Name:</label>
+                        <input type="text" class="form-control" id="first_name" name="fName" value="<%= vendor.userRef.fName %>">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="last_name" class="form-label">Last Name:</label>
+                        <input type="text" class="form-control" id="last_name" name="lName" value="<%= vendor.userRef.lName %>">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="email" class="form-label">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" value="<%= vendor.userRef.email %>">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="phone_no" class="form-label">Phone Number:</label>
+                        <input type="text" class="form-control" id="phone_no" name="phone_no" value="<%= vendor.userRef.phone_no %>">
+                    </div>
+                </div>
+                <div class="col-md-4" >
+                    <label for="date_of_birth" class="form-label">Booked Date:</label>
+                    <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" value="<%= vendor. createdAt ? new Date(vendor.createdAt).toISOString().split('T')[0] : '' %>">
+                </div>
+            </div>
+            <div id="message" class="alert alert-success" role="alert" style="display: none; color: green; text-align: center; font-size: larger; font-weight: 600;"></div>
+            <div id="Sucmessage" class="alert alert-success" role="alert" style="display: none; color: green; text-align: center; font-size: larger; font-weight: 600;"></div>
+
+            <hr>
+            <div class="p-detail text-center">
+                <h6>*Personal Details</h6>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="address" class="form-label">Office Address/address:</label>
+                    <input type="text" class="form-control" id="address" name="address" value="<%= vendor.vendorRef.userRefs.address %>">
+                    <input type="text" name="userId" value="<%= vendor.userRef._id %>">
+                </div>
+                <div class="col-md-4">
+                    <label for="job" class="form-label">Job Title:</label>
+                    <input type="text" class="form-control" id="job" name="job_title" value="<%= vendor.vendorRef.userRefs.job_title %>">
+                </div>
+                <div class="col-md-4">
+                    <label for="Years_of_experience" class="form-label">Years of Experience:</label>
+                    <select class="form-select" id="Years_of_experience" name="Years_of_experience">
+                        <option value="<%= vendor.vendorRef.userRefs.Years_of_experience %>" selected><%= vendor.vendorRef.userRefs.Years_of_experience %></option>
+                        <option value="1-2 years">1-2 years</option>
+                        <option value="3-4 years">3-4 years</option>
+                        <option value="5 years">5 years</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="qualification" class="form-label">Highest Qualification:</label>
+                    <select class="form-select" id="qualification" name="qualification">
+                        <option value="<%= vendor.vendorRef.userRefs.qualification %>" selected><%= vendor.vendorRef.userRefs.qualification %></option>
+                        <option value="Skilled Trained">Skilled Trained</option>
+                        <option value="WEAC/NECO/GCE/NABTEP">WEAC/NECO/GCE/NABTEP</option>
+                        <option value="OND/HND">OND/HND</option>
+                        <option value="Bachelor Degree">Bachelor Degree</option>
+                    </select>
+                </div>
+                <div id="error-message" class="alert alert-danger" role="alert" style="display: none;"></div>
+
+                <div class="col-md-4">
+                    <label for="skills_tools" class="form-label">Skills/Tools:</label>
+                    <input type="text" class="form-control" id="skills_tools" name="skills_tools" value="<%= vendor.vendorRef.userRefs.skills_tools %>">
+                </div>
+                <div class="col-md-4" style="padding: 10px; ">
+                    <label for="bio"> Vendor Bio</label>
+                    <textarea cols="54" rows="4" id="bio" name="bio" required style="padding: 10px;"><%= vendor.vendorRef.userRefs.bio %></textarea>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4" style="margin-top: -2rem;">
+                    <label for="date_of_birth" class="form-label">Date of Birth:</label>
+                    <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" value="<%= vendor.vendorRef.userRefs.date_of_birth ? new Date(vendor.vendorRef.userRefs.date_of_birth).toISOString().split('T')[0] : '' %>">
+                </div>
+
+                <div class="col-md-4">
+                    <label for="rating">Rate (1-5):</label>
+                    <select id="rating" name="rating" required>
+                        <option value="1" <%= vendor.rating === 1 ? 'selected' : '' %>>1</option>
+                        <option value="2" <%= vendor.rating === 2 ? 'selected' : '' %>>2</option>
+                        <option value="3" <%= vendor.rating === 3 ? 'selected' : '' %>>3</option>
+                        <option value="4" <%= vendor.rating === 4 ? 'selected' : '' %>>4</option>
+                        <option value="5" <%= vendor.rating === 5 ? 'selected' : '' %>>5</option>
+                    </select>
+                </div> 
+                <div class="col-md-4">
+                    <input class="form-check-input" type="radio" name="verification_status" id="verify" value="Verified"
+                        <% if (vendor.vendorRef.verification_status === 'Verified') { %> checked <% } %>>
+                    <label class="form-check-label" for="verify" style="color: green; font-size: large; font-weight: 600;">
+                        Verified
+                    </label>
+                </div>
+            </div>
+            <div class="text-center"> <a href="/view/vendor/upload/work/page?email=<%= vendor.userRef.email %>"> View vendor uploaded works</a></div>
+
+            <hr>
+            <div class="submit-txt">
+                <p>By submitting this form , you  agree to the  appliction of the User booking  this vendor.</p>
+                <p >Or view vendor  previously and recent uploaded works <a href="/view/vendor/upload/work/page?email=<%= vendor.userRef.email %>"> Click now To View </a> </p>
+            </div>
+            <div class="text-center btn-div">
+                <button type="submit" class="btn btn-primary" style="background-color:#b8860B;" id="subBtn">Comfirm application</button>
+            </div>
+        </div>
+    </form>
+    <script>
+        document.getElementById('updateVendorForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent the default form submission
+    
+            const form = event.target;
+            const formData = new FormData(form);
+    
+            // Display "Please wait..." message
+            document.getElementById('message').textContent = "Please wait...";
+            document.getElementById('message').style.display = 'block';
+            document.getElementById('Sucmessage').style.display = 'none';
+    
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json',
+                    },
+                });
+    
+                const result = await response.json();
+    
+                if (response.ok) {
+                    // Hide "Please wait..." message and show success message
+                    document.getElementById('message').style.display = 'none';
+                    document.getElementById('Sucmessage').textContent = "An email has been sent to the vendor";
+                    document.getElementById('Sucmessage').style.display = 'block';
+    
+                    // Change the button text and style
+                    const submitButton = document.getElementById('subBtn');
+                    submitButton.textContent = "Application Confirmed";
+                    submitButton.style.color = "white";
+                    submitButton.style.backgroundColor = "green";
+                    submitButton.style.fontSize = "large";
+                    submitButton.style.fontWeight = 600;
+                } else {
+                    throw new Error(result.message || 'An error occurred while updating the vendor.');
+                }
+            } catch (error) {
+                // Show error message
+                document.getElementById('error-message').textContent = error.message;
+                document.getElementById('error-message').style.display = 'block';
+                document.getElementById('message').style.display = 'none';
+            }
+        });
+    </script>
+    
+</body>
+</html>

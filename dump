@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -231,3 +232,1027 @@
   
   
 <!-- dasbord css.............. -->
+=======
+autoimage slider
+
+
+<nav>
+   
+</nav>
+star icon
+<i class="fa-regular fa-star"></i>// admin.js
+
+$(document).ready(function() {
+    // Handle update form submission
+    $('#updateAdminForm').submit(async function(event) {
+        event.preventDefault(); // Prevent the form from submitting normally
+
+        const adminId = $('#adminId').val();
+        const formData = {
+            fName: $('#fName').val(),
+            email: $('#email').val(),
+            password: $('#password').val(),
+            lName: $('#lName').val(),
+            phone_no: $('#phone_no').val(),
+            address: $('#address').val(),
+            date_of_birth: $('#date_of_birth').val(),
+            state: $('#state').val(),
+            LGA: $('#LGA').val(),
+            gender: $('#gender').val()
+        };
+
+        try {
+            const response = await fetch(`/api/admin/${adminId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+            const result = await response.json();
+
+            if (response.ok) {
+                alert('Admin updated successfully');
+                console.log('Admin updated:', result);
+            } else {
+                alert('Update failed: ' + result.message);
+                console.error('Update failed:', result.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+
+    // Handle delete button click
+    $('#deleteAdminBtn').click(async function() {
+        const adminId = $('#adminId').val();
+
+        try {
+            const response = await fetch(`/api/admin/${adminId}`, {
+                method: 'DELETE'
+            });
+            const result = await response.json();
+
+            if (response.ok) {
+                alert('Admin deleted successfully');
+                console.log('Admin deleted:', result);
+            } else {
+                alert('Deletion failed: ' + result.message);
+                console.error('Deletion failed:', result.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+});
+const Profession = require("../model/professionModel"); // Adjust the path as needed
+const User = require("../model/userModel"); // Adjust the path as needed
+
+// Find a single user's profession
+const findSingleUserProfession = async (req, res) => {
+    try {
+        const userId = req.params.id; // Assuming you pass userId in the URL
+        const profession = await Profession.findOne({ userRef: userId }).populate('userRef');
+
+        if (!profession) {
+            return res.status(404).render('error', { message: 'Profession not found' }); // Replace with your error handling EJS template
+        }
+
+        res.render('professionDetail', { profession });
+    } catch (error) {
+        console.error(error);
+        res.status(500).render('error', { message: 'Internal server error' }); // Replace with your error handling EJS template
+    }
+};
+
+// Find all user professions
+const findAllUserProfessions = async (req, res) => {
+    try {
+        const professions = await Profession.find().populate('userRef');
+
+        res.render('allProfessions', { professions });
+    } catch (error) {
+        console.error(error);
+        res.status(500).render('error', { message: 'Internal server error' }); // Replace with your error handling EJS template
+    }
+};
+
+module.exports = {
+    findSingleUserProfession,
+    findAllUserProfessions
+};
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Profession</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .rating-icons {
+            display: flex;
+            font-size: 24px;
+            color: #ffd700; /* Gold color for the stars */
+            cursor: pointer;
+        }
+        .rating-icons i {
+            margin: 0 2px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Update Profession</h1>
+
+    <!-- Display the image -->
+    <div class="form-group">
+        <label>Current Profile Image:</label>
+        <img src="<%= profession.profileImage ? 'data:' + profession.imageType + ';base64,' + profession.profileImage : '/images/default-profile.png' %>" alt="Profile Image">
+    </div>
+
+    <form id="updateForm" action="/update/profession/<%= profession._id %>" method="post" enctype="multipart/form-data">
+        <!-- Form fields here -->
+
+        <div class="form-group">
+            <label for="rating">Rating:</label>
+            <div class="rating-icons">
+                <i class="fa fa-star" data-rating="1"></i>
+                <i class="fa fa-star" data-rating="2"></i>
+                <i class="fa fa-star" data-rating="3"></i>
+                <i class="fa fa-star" data-rating="4"></i>
+                <i class="fa fa-star" data-rating="5"></i>
+            </div>
+            <input type="hidden" id="rating" name="rating" value="<%= profession.rating %>">
+        </div>
+
+        <div class="form-group">
+            <label for="profileImage">Upload New Profile Image:</label>
+            <input type="file" id="profileImage" name="profileImage" accept="image/*">
+        </div>
+        <button type="submit">Update Profession</button>
+    </form>
+
+    <script>
+        // JavaScript for handling star rating clicks
+        document.querySelectorAll('.rating-icons i').forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = this.getAttribute('data-rating');
+                document.getElementById('rating').value = rating;
+                
+                // Highlight the stars up to the clicked one
+                document.querySelectorAll('.rating-icons i').forEach(star => {
+                    star.classList.remove('fa-solid');
+                    star.classList.add('fa-regular');
+                });
+                this.classList.add('fa-solid');
+                this.previousElementSibling && this.previousElementSibling.classList.add('fa-solid');
+            });
+        });
+    </script>
+
+    <a href="/professions">Back to All Professions</a>
+
+    <!-- Optional JavaScript -->
+    <script src="/jquery/jquery.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.bundle.js"></script>
+</body>
+</html>
+2. Backend: Handle the Rating Update
+Update your backend code to handle the form submission, including the rating.
+
+Example Backend Route for Updating Profession
+javascript
+Copy code
+const express = require('express');
+const router = express.Router();
+const Profession = require('../model/professionModel');
+
+// Update profession route
+router.post('/update/profession/:id', async (req, res) => {
+    try {
+        const { phone_no, address, state, LGA, job_title, Years_of_experience, qualification, skills_tools, bio, rating } = req.body;
+        const profileImage = req.file ? req.file.buffer.toString('base64') : null;
+        const imageType = req.file ? req.file.mimetype : null;
+
+        const updatedProfession = await Profession.findByIdAndUpdate(req.params.id, {
+            phone_no,
+            address,
+            state,
+            LGA,
+            job_title,
+            Years_of_experience,
+            qualification,
+            skills_tools,
+            bio,
+            rating,
+            profileImage,
+            imageType
+        }, { new: true });
+
+        if (updatedProfession) {
+            console.log("Profession updated successfully", updatedProfession);
+            res.status(200).json({
+                status: "success",
+                message: "Profession updated successfully",
+                updatedProfession
+            });
+        } else {
+            console.log("Update failed");
+            res.status(400).json({
+                status: "failure",
+                message: "Update failed"
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: error.message || "Internal server error"
+        });
+    }
+});
+
+module.exports = router;
+// adminSchema.pre("save", async function(next){
+//     const salt= await bcrypt.genSalt(10)
+//     this.password=await bcrypt.hash(this.password, salt);
+//     next();
+// })
+adminSchema.statics.login = async function(email, password) {
+    console.log(`Attempting login with email: ${email}`); // Add logging
+    const userExis = await this.findOne({ email });
+    if (userExis) {
+      console.log(`User found: ${userExis.email}`); // Add logging
+      const ispswMatch = await bcrypt.compare(password, userExis.password);
+      if (!ispswMatch) {
+        console.log('Password mismatch'); // Add logging
+        throw new Error("Invalid password or email");
+      }  
+      return userExis;
+    }
+    console.log('User not found'); // Add logging
+    throw new Error("User not found");
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  const User=require("../model/userModel");
+const Admin=require("../model/adminmodel")
+// const Profession=require("../model/professionModel")
+
+
+module.exports={
+    registerAdmin: async(req,res)=>{
+        try {
+            const { fName,
+                email,
+                password,
+                lName,
+                phone_no,
+                address,
+                date_of_birth,
+                state,
+                LGA,
+                gender,
+             
+                role,}=req.body;
+                const profileImage=req.file?req.file.buffer.toString("base64"):null;
+                const  imageType=req.file?req.file.mimetype:null; 
+               
+            //         const fnameRegex = /^[A-Za-z\s.'-]+$/;
+            //         const lnameRegex = /^[A-Za-z\s.'-]+$/;
+            //         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            //         // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[<,.])[^\s]{8,}$/;
+            //         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d@$!%*?&<>^.,:;[\]{}()|~`#\-_/\\+=]{4,}$/;
+            
+            //         const phone_numberRegex = /^\+?\d{1,4}[-\s]?\d{1,15}$/;
+            //         const addressRegex = /^[A-Za-z0-9\s.,#'-]+$/;
+            //         const stateRegex = /^[A-Za-z\s.'-]+$/;
+            //         const lgaRegex = /^[A-Za-z\s\-'’]+$/;
+            //           // Validate input fields
+            // if (!fnameRegex.test(fName)) throw new Error("Invalid first name format");
+            // if (!lnameRegex.test(lName)) throw new Error("Invalid last name format");
+            // if (!emailRegex.test(email)) throw new Error("Invalid email format");
+            // if (!passwordRegex.test(password)) throw new Error("Invalid password format");
+            // if (!phone_numberRegex.test(phone_no)) throw new Error("Invalid phone number format");
+            // if (!addressRegex.test(address)) throw new Error("Invalid address format");
+            // if (!stateRegex.test(state)) throw new Error("Invalid state format");
+            // if (!lgaRegex.test(LGA)) throw new Error("Invalid LGA format");
+            // if (isNaN(Date.parse(date_of_birth))) throw new Error("Invalid date of birth format");
+               const newAdmin=await Admin.create({
+                fName,
+                email,
+                password,
+                lName,
+                phone_no,
+                address,
+                date_of_birth,
+                state,
+                LGA,
+                gender,
+             
+                role,
+                profileImage,
+                imageType
+    
+               })
+               if(newAdmin){
+                console.log("admin created successfuly", newAdmin);
+               
+                res.redirect("/login/page")
+               }
+               console.log(" registration failed");
+    
+                
+
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({
+                message:"internal server error"|| error.message
+            })
+            
+        }
+
+            
+        
+     
+      
+
+        },
+
+
+    // registerUser: async(req, res) => {
+    //     try {
+    //         const { fName, email, password,  lName, phone_no, gender } = req.body;
+    //         console.log(req.body);
+            
+    //         const fnameRegex = /^[A-Za-z\s.'-]+$/;
+    //         const lnameRegex = /^[A-Za-z\s.'-]+$/;
+    //         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    //         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d@$!%*?&<>^.,:;[\]{}()|~`#\-_/\\+=]{8,}$/;
+    //         const phone_numberRegex = /^\+?\d{1,4}[-\s]?\d{1,15}$/;
+    
+    //         // Validate input fields
+    //         if (!fnameRegex.test(fName)) throw new Error("Invalid first name format");
+    //         if (!lnameRegex.test(lName)) throw new Error("Invalid last name format");
+    //         if (!emailRegex.test(email)) throw new Error("Invalid email format");
+    //         if (!passwordRegex.test(password)) throw new Error("Invalid password format");
+    //         if (!phone_numberRegex.test(phone_no)) throw new Error("Invalid phone number format");
+    
+    //         // Hash the password before saving
+  
+    
+    //         const newUser = await User.create({
+    //             fName,
+    //             email,
+    //             password,
+    //             lName,
+    //             phone_no,
+    //             gender,
+    //         });
+    
+    //         if (newUser) {
+    //             console.log("User created successfully", newUser);
+    //             res.status(200).json({
+    //                 status: "success",
+    //                 message: "User registered successfully",
+    //                 newUser,
+    //             });
+    //         } else {
+    //             console.log("Registration failed");
+    //         }
+    
+    //     } catch (error) {
+    //         console.log(error);
+    //         res.status(500).json({
+    //             message: error.message || "Internal server error",
+    //         });
+    //     }
+    // },
+    // registerProfession: async (req, res) => {
+    //     try {
+    //         const {
+    //             phone_no,
+    //             address,
+    //             date_of_birth,
+    //             state,
+    //             LGA,
+    //             job_title,
+    //             Years_of_experience,
+    //             qualification,
+    //             skills_tools,
+    //             bio,
+    //             user_email // Added for user lookup
+    //         } = req.body;
+    
+    //         // Handle profile image
+    //         const profileImage = req.file ? req.file.buffer.toString("base64") : null;
+    //         const imageType = req.file ? req.file.mimetype : null;
+    
+    //         // Regex for validation
+    //         const addressRegex = /^[A-Za-z0-9\s.,#'-]+$/;
+    //         const stateRegex = /^[A-Za-z\s.'-]+$/;
+    //         const lgaRegex = /^[A-Za-z\s\-'’]+$/;
+    //         const jobTitleRegex = /^[A-Za-z\s.,'-]+$/;
+    //         const yearsOfExperienceRegex = /^[0-9]{1,2}$/; // 1 to 99 years
+    //         const qualificationRegex = /^[A-Za-z\s.,'-]+$/;
+    //         const skillsToolsRegex = /^[A-Za-z0-9\s.,'!@#$%^&*()_+=[\]{}|;:<>?-]+$/;
+    //         const bioRegex = /^[A-Za-z0-9\s.,'!@#$%^&*()_+=[\]{}|;:<>?-]{10,}$/; // Minimum 10 characters
+    
+    //         // Validate input fields
+    //         if (!addressRegex.test(address)) throw new Error("Invalid address format");
+    //         if (!stateRegex.test(state)) throw new Error("Invalid state format");
+    //         if (!lgaRegex.test(LGA)) throw new Error("Invalid LGA format");
+    //         if (!jobTitleRegex.test(job_title)) throw new Error("Invalid job title format");
+    //         if (!yearsOfExperienceRegex.test(Years_of_experience)) throw new Error("Invalid years of experience format");
+    //         if (!qualificationRegex.test(qualification)) throw new Error("Invalid qualification format");
+    //         if (!skillsToolsRegex.test(skills_tools)) throw new Error("Invalid skills/tools format");
+    //         if (!bioRegex.test(bio)) throw new Error("Bio must be at least 10 characters long");
+
+    //         // Validate and find user by email
+    //         const user = await User.findOne({ email: user_email });
+    //         if (!user) {
+    //             throw new Error("User not found");
+    //         }
+    
+    //         // Create new Profession document
+    //         const newProfession = await Profession.create({
+    //             phone_no,
+    //             address,
+    //             state,
+    //             LGA,
+    //             job_title,
+    //             Years_of_experience,
+    //             qualification,
+    //             skills_tools,
+    //             bio,
+    //             profileImage,
+    //             imageType,
+    //             userRef: user._id // Assign the user's ID
+    //         });
+    
+    //         if (newProfession) {
+    //             console.log("Profession registered successfully", newProfession);
+    //             res.status(200).json({
+    //                 status: "success",
+    //                 message: "Profession registered successfully",
+    //                 newProfession
+    //             });
+    //         } else {
+    //             console.log("Registration failed");
+    //             res.status(400).json({
+    //                 status: "failure",
+    //                 message: "Registration failed"
+    //             });
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //         res.status(500).json({
+    //             message: error.message || "Internal server error"
+    //         });
+    //     }
+    // }
+    
+    //     }
+        // login :async (req, res) => {
+        //     try {
+        //       const { email, password, role } = req.body;
+        //       if (role === "admin") {
+        //         const loginAdmin = await Adminmodel.login(email, password);
+        //         if (!loginAdmin) {
+        //           return res.status(400).send({ error: 'Invalid email or password' });
+        //         }
+        //         const token = genAdmintoken(loginAdmin._id);
+        //         req.session.token = token;
+        //         req.session.adminId = loginAdmin._id;
+        //         return res.redirect('/admin/dashBord');
+        //       } else if (role === "patient") {
+        //         const loginPatient = await Patientmodel.login(email, password);
+        //         if (!loginPatient) {
+        //           return res.status(400).send({ error: 'Invalid email or password' });
+        //         }
+        //         const token = genPatientToken(loginPatient._id);
+        //         req.session.token = token;
+        //         req.session.loginPatientId = loginPatient._id;
+        //         return res.redirect('/patients/dashBord');
+        //       } else {
+        //         const loginStaff = await Staffmodel.login(email, password);
+        //         if (!loginStaff) {
+        //           return res.status(400).send({ error: 'Invalid email or password' });
+        //         }
+        //         const token = genStafftoken(loginStaff._id);
+        //         req.session.token = token;
+        //         req.session.staffId = loginStaff._id;
+        //         if (role === "doctor") return res.redirect("/doctors/dashbord");
+        //         if (role === "labTechnician") return res.redirect("/labTechs/dashbord");
+        //       } 
+        //     } catch (error) {
+        //       res.status(500).json({ message: "Internal server error" || error.message });
+        //     }
+        //   },
+        
+          
+        }
+
+        reupdating user in db const VerifiedVendor = require('../models/verifiedVendorModel');
+
+        const adminVerifyVendor = async (req, res) => {
+            try {
+                const { fName, lName, email, phone_no, address, job_title, Years_of_experience, qualification, skills_tools, bio, date_of_birth, verification_status, userId } = req.body;
+        
+                // Find the vendor by userId
+                let vendor = await VerifiedVendor.findOne({ _id: userId });
+        
+                if (!vendor) {
+                    return res.status(404).json({ message: "Vendor not found." });
+                }
+        
+                // Update the vendor details
+                vendor.fName = fName;
+                vendor.lName = lName;
+                vendor.email = email;
+                vendor.phone_no = phone_no;
+                vendor.address = address;
+                vendor.job_title = job_title;
+                vendor.Years_of_experience = Years_of_experience;
+                vendor.qualification = qualification;
+                vendor.skills_tools = skills_tools;
+                vendor.bio = bio;
+                vendor.date_of_birth = date_of_birth;
+                vendor.verification_status = verification_status;
+        
+                // Save the updated vendor details
+                await vendor.save();
+        
+                // Redirect or respond with a success message
+                res.status(200).json({ message: "Vendor details updated and verified successfully." });
+            } catch (error) {
+                console.error("Error updating vendor:", error);
+                res.status(500).json({ message: "Internal server error." });
+            }
+        };
+        
+        module.exports = { adminVerifyVendor };
+        
+
+
+
+
+
+
+
+  value="<%= vendor.date_of_birth.toISOString().split('T')[0] %>"
+
+
+  <section class="container">
+        <div class="top-provider">
+          <div class="text-center">
+            <h4>Top provider near you</h4>
+          </div>
+          <div class="provider-box">
+            <div class="wrap-boxes">
+              <% if (vendors && vendors.length > 0) { %>
+                <% vendors.forEach(vendor => { %>
+            <div class="box-content">
+              <div class="star-icon text-center"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i> <i class="fa-regular fa-star"></i> <i class="fa-regular fa-star"></i></div>
+              <div class="image-div text-center">
+                <% if (vendor.profileImage && vendor.imageType) { %>
+                  <img src="data:<%= vendor.imageType %>;base64,<%= vendor.profileImage %>" alt="Profile Image" >
+              <% } else { %>
+                  <p>No image available</p>
+              <% } %>
+              </div>
+              <div class="image-txt text-center">
+                <p><%= vendor.fName %> <%= vendor.lName %></p>
+                <p><%= vendor.job_title %></p>
+                <p><%= vendor.address %></p>
+              <button class="book">  <a href="/clients/book/vendor/page?id=<%= vendor._id %>&userId=<%= user._id %>">Book Now</a></button>
+
+              </div>
+            </div>
+          
+            <div class="box-content"> <div class="star-icon text-center"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i> <i class="fa-regular fa-star"></i> <i class="fa-regular fa-star"></i></div>
+              <div class="image-div text-center">
+                <img src="/images/boss1.jpg" alt="">
+              </div>
+              <div class="image-txt text-center">
+                <p>Colincs Mathew</p>
+                <p>Computer Enginer</p>
+                <p>123km awway</p>
+
+              </div>
+             
+            </div>
+            <div class="box-content"> <div class="star-icon text-center"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i> <i class="fa-regular fa-star"></i> <i class="fa-regular fa-star"></i></div>
+              <div class="image-div text-center">
+                <img src="/images/boss2.jpg" alt="">
+              </div>
+              <div class="image-txt text-center">
+                <p>Colincs Mathew</p>
+                <p>Computer Enginer</p>
+                <p>123km awway</p>
+
+              </div></div>
+            <div class="box-content"> <div class="star-icon text-center"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i> <i class="fa-regular fa-star"></i>  <i class="fa-regular fa-star"></i></div>
+              <div class="image-div text-center">
+                <img src="/images/boss1.jpg" alt="">
+              </div>
+              <div class="image-txt text-center">
+                <p>Colincs Mathew</p>
+                <p>Computer Enginer</p>
+                <p>123km awway</p>
+
+              </div></div>
+            <div class="box-content"> <div class="star-icon text-center"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i> <i class="fa-regular fa-star"></i> <i class="fa-regular fa-star"></i></div>
+              <div class="image-div text-center">
+                <img src="/images/boss1.jpg" alt="">
+              </div>
+              <div class="image-txt text-center">
+                <p>Colincs Mathew</p>
+                <p>Computer Enginer</p>
+                <p>123km awway</p>
+
+              </div></div>
+            <div class="box-content"> <div class="star-icon text-center"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i> <i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i></div>
+              <div class="image-div text-center">
+                <img src="/images/boss1.jpg" alt="">
+              </div>
+              <div class="image-txt text-center">
+                <p>Colincs Mathew</p>
+                <p>Computer Enginer</p>
+                <p>123km awway</p>
+
+              </div></div>
+            <div class="box-content"> <div class="star-icon text-center"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i></div>
+              <div class="image-div text-center">
+                <img src="/images/boss1.jpg" alt="">
+              </div>
+              <div class="image-txt text-center">
+                <p>Colincs Mathew</p>
+                <p>Computer Enginer</p>
+                <p>123km awway</p>
+
+              </div></div>
+            <div class="box-content"> <div class="star-icon text-center"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i></div>
+              <div class="image-div text-center">
+                <img src="/images/boss1.jpg" alt="">
+              </div>
+              <div class="image-txt text-center">
+                <p>Colincs Mathew</p>
+                <p>Computer Enginer</p>
+                <p>123km awway</p>
+
+              </div>
+            </div>
+            <% }) %>
+            <% } else { %>
+                <p>No verified vendors found.</p>
+            <% } %>
+          </div>
+
+    </section>
+
+    const joinBtn = document.querySelector(".join");
+        const imageSection = document.querySelector(".image-info");
+        const contSection = document.querySelector("#cont");
+        
+        joinBtn.addEventListener("click", function() {
+            imageSection.style.display = "none";
+            contSection.style.display = "block";
+        });
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Vendor Page</title>
+    <link rel="stylesheet" href="/css/skill.css">
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/56adb67a5b.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container"><h2 id="bio">Vendor Bio Data</h2></div>
+    <form id="updateVendorForm" action="/admin/update/booked/vendor/<%= vendor._id %>" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="_method" value="PUT"> <!-- Hidden input to simulate PUT request -->
+        <div class="container wrapp" id="vendorSection">
+            <div class="container text-center">
+                <% if (vendor && vendor.vendorRef && vendor.vendorRef.profileImage && vendor.vendorRef.imageType) { %>
+                    <img src="data:<%= vendor.vendorRef.imageType %>;base64,<%= vendor.vendorRef.profileImage %>" alt="Profile Image" style="width: 200px; height: 200px; border-radius: 10px;">
+                    <input type="hidden" name="profileImage" value="<%= vendor.vendorRef.profileImage %>">
+                    <input type="hidden" name="imageType" value="<%= vendor.vendorRef.imageType %>">
+                <% } else { %>
+                    <p>No image available</p>
+                <% } %>
+            </div>
+            <div class="container">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="first_name" class="form-label">First Name:</label>
+                        <input type="text" class="form-control" id="first_name" name="fName" value="<%= vendor.fName %>">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="last_name" class="form-label">Last Name:</label>
+                        <input type="text" class="form-control" id="last_name" name="lName" value="<%= vendor.lName %>">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="email" class="form-label">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" value="<%= vendor.userRef.email %>">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="phone_no" class="form-label">Phone Number:</label>
+                        <input type="text" class="form-control" id="phone_no" name="phone_no" value="<%= vendor.userRef.phone_no %>">
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="p-detail text-center">
+                <h6>*Personal Details</h6>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="address" class="form-label">Office Address/address:</label>
+                    <input type="text" class="form-control" id="address" name="address" value="<%= vendor.vendorRef.userRefs.address %>">
+                    <input type="hidden" name="userId" value="<%= vendor._id %>">
+                </div>
+                <div class="col-md-4">
+                    <label for="job" class="form-label">Job Title:</label>
+                    <input type="text" class="form-control" id="job" name="job_title" value="<%= vendor.vendorRef.userRefs.job_title %>">
+                </div>
+                <div class="col-md-4">
+                    <label for="Years_of_experience" class="form-label">Years of Experience:</label>
+                    <select class="form-select" id="Years_of_experience" name="Years_of_experience">
+                        <option value="<%= vendor.vendorRef.userRefs.Years_of_experience %>" selected><%= vendor.vendorRef.userRefs.Years_of_experience %></option>
+                        <option value="1-2 years">1-2 years</option>
+                        <option value="3-4 years">3-4 years</option>
+                        <option value="5 years">5 years</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="qualification" class="form-label">Highest Qualification:</label>
+                    <select class="form-select" id="qualification" name="qualification">
+                        <option value="<%= vendor.vendorRef.userRefs.qualification %>" selected><%= vendor.vendorRef.userRefs.qualification %></option>
+                        <option value="Skilled Trained">Skilled Trained</option>
+                        <option value="WEAC/NECO/GCE/NABTEP">WEAC/NECO/GCE/NABTEP</option>
+                        <option value="OND/HND">OND/HND</option>
+                        <option value="Bachelor Degree">Bachelor Degree</option>
+                    </select>
+                </div>
+                <div id="error-message" class="alert alert-danger" role="alert" style="display: none;"></div>
+
+                <div class="col-md-4">
+                    <label for="skills_tools" class="form-label">Skills/Tools:</label>
+                    <input type="text" class="form-control" id="skills_tools" name="skills_tools" value="<%= vendor.vendorRef.userRefs.skills_tools %>">
+                </div>
+                <div class="col-md-4" style="padding: 10px; ">
+                    <label for="bio"> Vendor Bio</label>
+                    <textarea cols="54" rows="4" id="bio" name="bio" required style="padding: 10px;"><%= vendor.vendorRef.userRefs.bio %></textarea>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4" style="margin-top: -2rem;">
+                    <label for="date_of_birth" class="form-label">Date of Birth:</label>
+                    <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" value="<%= vendor.vendorRef.userRefs.date_of_birth ? new Date(vendor.vendorRef.userRefs.date_of_birth).toISOString().split('T')[0] : '' %>">
+                </div>
+                <div id="message" class="alert alert-success" role="alert" style="display: none;"></div>
+
+                <div class="col-md-4">
+                    <label for="rating">Rate (1-5):</label>
+                    <select id="rating" name="rating" required>
+                        <option value="1" <%= vendor.rating === 1 ? 'selected' : '' %>>1</option>
+                        <option value="2" <%= vendor.rating === 2 ? 'selected' : '' %>>2</option>
+                        <option value="3" <%= vendor.rating === 3 ? 'selected' : '' %>>3</option>
+                        <option value="4" <%= vendor.rating === 4 ? 'selected' : '' %>>4</option>
+                        <option value="5" <%= vendor.rating === 5 ? 'selected' : '' %>>5</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <input class="form-check-input" type="radio" name="verification_status" id="verify" value="Verified" <% if (vendor.vendorRef.userRefs.verification_status === 'Verified') { %> checked <% } %>>
+                    <label class="form-check-label" for="verify" style="color: green; font-size: large; font-weight: 600;">
+                        Verified
+                    </label>               
+                </div>
+            </div>
+            <hr>
+            <div class="text-center btn-div">
+                <button type="submit" class="btn btn-primary" style="background-color:#b8860B;">Update Now</button>
+            </div>
+        </div>
+    </form>
+    <script>
+        document.getElementById('updateVendorForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            const form = event.target;
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json',
+                    },
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('message').textContent = result.message;
+                    document.getElementById('message').style.display = 'block';
+                    document.getElementById('error-message').style.display = 'none';
+                } else {
+                    throw new Error(result.message || 'An error occurred while updating the vendor.');
+                }
+            } catch (error) {
+                document.getElementById('error-message').textContent = error.message;
+                document.getElementById('
+
+
+
+
+
+
+
+
+
+
+
+
+                  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Vendor Page</title>
+    <link rel="stylesheet" href="/css/skill.css">
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/56adb67a5b.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container"><h2 id="bio">Vendor Bio Data</h2></div>
+    <form id="updateVendorForm" action="/admin/update/booked/vendor/<%= vendor._id %>" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="_method" value="PUT"> <!-- Hidden input to simulate PUT request -->
+        <div class="container wrapp" id="vendorSection">
+            <div class="container text-center">
+                <% if (vendor && vendor.vendorRef && vendor.vendorRef.profileImage && vendor.vendorRef.imageType) { %>
+                    <img src="data:<%= vendor.vendorRef.imageType %>;base64,<%= vendor.vendorRef.profileImage %>" alt="Profile Image" style="width: 200px; height: 200px; border-radius: 10px;">
+                    <input type="hidden" name="profileImage" value="<%= vendor.vendorRef.profileImage %>">
+                    <input type="hidden" name="imageType" value="<%= vendor.vendorRef.imageType %>">
+                <% } else { %>
+                    <p>No image available</p>
+                <% } %>
+            </div>
+            <div class="container">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="first_name" class="form-label">First Name:</label>
+                        <input type="text" class="form-control" id="first_name" name="fName" value="<%= vendor.fName %>">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="last_name" class="form-label">Last Name:</label>
+                        <input type="text" class="form-control" id="last_name" name="lName" value="<%= vendor.lName %>">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="email" class="form-label">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" value="<%= vendor.userRef.email %>">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="phone_no" class="form-label">Phone Number:</label>
+                        <input type="text" class="form-control" id="phone_no" name="phone_no" value="<%= vendor.userRef.phone_no %>">
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="p-detail text-center">
+                <h6>*Personal Details</h6>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="address" class="form-label">Office Address/address:</label>
+                    <input type="text" class="form-control" id="address" name="address" value="<%= vendor.vendorRef.userRefs.address %>">
+                    <input type="hidden" name="userId" value="<%= vendor._id %>">
+                </div>
+                <div class="col-md-4">
+                    <label for="job" class="form-label">Job Title:</label>
+                    <input type="text" class="form-control" id="job" name="job_title" value="<%= vendor.vendorRef.userRefs.job_title %>">
+                </div>
+                <div class="col-md-4">
+                    <label for="Years_of_experience" class="form-label">Years of Experience:</label>
+                    <select class="form-select" id="Years_of_experience" name="Years_of_experience">
+                        <option value="<%= vendor.vendorRef.userRefs.Years_of_experience %>" selected><%= vendor.vendorRef.userRefs.Years_of_experience %></option>
+                        <option value="1-2 years">1-2 years</option>
+                        <option value="3-4 years">3-4 years</option>
+                        <option value="5 years">5 years</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="qualification" class="form-label">Highest Qualification:</label>
+                    <select class="form-select" id="qualification" name="qualification">
+                        <option value="<%= vendor.vendorRef.userRefs.qualification %>" selected><%= vendor.vendorRef.userRefs.qualification %></option>
+                        <option value="Skilled Trained">Skilled Trained</option>
+                        <option value="WEAC/NECO/GCE/NABTEP">WEAC/NECO/GCE/NABTEP</option>
+                        <option value="OND/HND">OND/HND</option>
+                        <option value="Bachelor Degree">Bachelor Degree</option>
+                    </select>
+                </div>
+                <div id="error-message" class="alert alert-danger" role="alert" style="display: none;"></div>
+
+                <div class="col-md-4">
+                    <label for="skills_tools" class="form-label">Skills/Tools:</label>
+                    <input type="text" class="form-control" id="skills_tools" name="skills_tools" value="<%= vendor.vendorRef.userRefs.skills_tools %>">
+                </div>
+                <div class="col-md-4" style="padding: 10px; ">
+                    <label for="bio"> Vendor Bio</label>
+                    <textarea cols="54" rows="4" id="bio" name="bio" required style="padding: 10px;"><%= vendor.vendorRef.userRefs.bio %></textarea>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4" style="margin-top: -2rem;">
+                    <label for="date_of_birth" class="form-label">Date of Birth:</label>
+                    <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" value="<%= vendor.vendorRef.userRefs.date_of_birth ? new Date(vendor.vendorRef.userRefs.date_of_birth).toISOString().split('T')[0] : '' %>">
+                </div>
+                <div id="message" class="alert alert-success" role="alert" style="display: none;"></div>
+
+                <div class="col-md-4">
+                    <label for="rating">Rate (1-5):</label>
+                    <select id="rating" name="rating" required>
+                        <option value="1" <%= vendor.rating === 1 ? 'selected' : '' %>>1</option>
+                        <option value="2" <%= vendor.rating === 2 ? 'selected' : '' %>>2</option>
+                        <option value="3" <%= vendor.rating === 3 ? 'selected' : '' %>>3</option>
+                        <option value="4" <%= vendor.rating === 4 ? 'selected' : '' %>>4</option>
+                        <option value="5" <%= vendor.rating === 5 ? 'selected' : '' %>>5</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <input class="form-check-input" type="radio" name="verification_status" id="verify" value="Verified" <% if (vendor.vendorRef.userRefs.verification_status === 'Verified') { %> checked <% } %>>
+                    <label class="form-check-label" for="verify" style="color: green; font-size: large; font-weight: 600;">
+                        Verified
+                    </label>               
+                </div>
+            </div>
+            <hr>
+            <div class="text-center btn-div">
+                <button type="submit" class="btn btn-primary" style="background-color:#b8860B;">Update Now</button>
+            </div>
+        </div>
+    </form>
+    <script>
+        document.getElementById('updateVendorForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            const form = event.target;
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json',
+                    },
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('message').textContent = result.message;
+                    document.getElementById('message').style.display = 'block';
+                    document.getElementById('error-message').style.display = 'none';
+                } else {
+                    throw new Error(result.message || 'An error occurred while updating the vendor.');
+                }
+            } catch (error) {
+                document.getElementById('error-message').textContent = error.message;
+                document.getElementById('error-message').style.display = 'block';
+                document.getElementById('message').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
+
+>>>>>>> ef55d82 (committing workers connect  first time)

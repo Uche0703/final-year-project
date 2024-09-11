@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vendor bio page</title>
+    <link rel="stylesheet" href="/css/register.css">
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/56adb67a5b.js" crossorigin="anonymous"></script>
+    
+    </head>
+    <body>
+     
+    
+
+<body>
+    
+
+    <div class="container wrapp" id="vendorSection" >
+        <div class="container text-center">
+            <% if (vendor.profileImage && vendor.imageType) { %>
+                <img src="data:<%= vendor.imageType %>;base64,<%= vendor.profileImage %>" alt="Profile Image" style="width: 200px; height: 200px; border-radius: 10px;">
+            <% } else { %>
+                <p>No image available</p>
+            <% } %>        </div>
+     <h2 class="" id="bio">Vendor bio Data </h2>
+     <form action="/booked/vendor" method="post" id="registrationForm">
+          
+        <div class="container">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="first_name" class="form-label">First Name:</label>
+                    <input type="text" class="form-control" id="first_name" name="fName" value="<%= vendor.userRef.fName %>">
+                </div>
+                <div class="col-md-6">
+                    <label for="last_name" class="form-label">Last Name:</label>
+                    <input type="text" class="form-control" id="last_name" name="lName" value="<%= vendor.userRef.lName %>">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="email" class="form-label">Email:</label>
+                    <input type="email" class="form-control" id="email" name="email" value="<%= vendor.userRef.email %>">
+                </div>
+                <div class="col-md-6">
+                    <label for="phone_no" class="form-label">Phone Number:</label>
+                    <input type="text" class="form-control" id="phone_no" name="phone_no" value="<%= vendor.userRef.phone_no %>" >
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <input type="text" name="vendorId" value="<%= vendor._id %>">
+                    <label for="password" class="form-label">Office Address/address:</label>
+                    <input type="text" class="form-control" id="address" name="address"value="<%= vendor.userRefs.address %>"  >
+                </div>
+                <div class="col-md-6">
+                    <input type="hidden" name="userId" value="<%= userId %>">
+                    <label for="job" class="form-label">Job Title:</label>
+                    <input type="text" class="form-control" id="job"  name="job_title" value="<%= vendor.userRefs.job_title %>">
+                </div>
+            </div>
+
+        </div>
+        <div class="text-center book-section">
+            <button type="submit" class="btn-1">Book Now</button>
+            <span class="btn-2" style="padding: 15px; width: 10%; color:white; "> <a href="/view/vendor/upload/work/page?email=<%= vendor.userRef.email %>" style="color: white; text-decoration: none; cursor: pointer;">About Vendor</a></span>
+        </div>
+        
+            <hr>
+            <div class="wrap-p-detail" style="display: noe;">
+         <div class="p-detail text-center">
+            <h6>   *Personal Details</h6>
+         </div>
+           
+         <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="password" class="form-label">Office Address/address:</label>
+                <input type="text" class="form-control" id="address" name="address"value="<%= vendor.userRefs.address %>"  >
+                <input type="hidden" name="userId" >
+
+            
+            </div>
+            <div class="col-md-4">
+                <label for="job" class="form-label">Job Title:</label>
+                <input type="text" class="form-control" id="job"  name="job_title" value="<%= vendor.userRefs.job_title %>">
+                <!-- <button id="show" style="background-color: brown; color: aliceblue; border: 2px;">show</button> -->
+            </div>
+            <div class="col-md-4">
+                <label for="qualification" class="form-label">Years of Experience:</label>
+                <select class="form-select" id="gender" name="Years_of_experience" >
+                    <option value=""> your years  of experience</option>
+                   
+                    <option value="1-2 years">1-2 years</option>
+                    <option value="3-4 years">3-4 yearsr</option>
+                    <option value="5 years">5 years</option>
+                </select>
+            </div>
+         
+            <div class="col-md-4">
+                <label for="qualification" class="form-label">Heighest Qaulification:</label>
+                <select class="form-select" id="gender" name="qualification" >
+                    <option value="">Choose Highest Qualification</option>
+                    <option value="Skilled Trained" <%= vendor.userRefs.qualification === "Skilled Trained" ? "selected" : "" %>>Skilled Trained</option>
+                    <option value="WEAC/NECO/GCE/NABTEP" <%= vendor.userRefs.qualification === "WEAC/NECO/GCE/NABTEP" ? "selected" : "" %>>WEAC/NECO/GCE/NABTEP</option>
+                    <option value="OND/HND" <%= vendor.userRefs.qualification === "OND/HND" ? "selected" : "" %>>OND/HND</option>
+                    <option value="Bachelor Degree" <%= vendor.userRefs.qualification === "Bachelor Degree" ? "selected" : "" %>>Bachelor Degree</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="skill/tools" class="form-label">Skills/Tools:</label>
+                <input type="text" class="form-control" id="tool" name="skills_tools"  value="<%= vendor.userRefs.skills_tools %>">
+            </div>
+            <div class="col-md-4">
+             
+              <textarea name="bio" id="bio" rows="3" cols="60" style=" font-size: small;"><%= vendor.userRefs.bio %> </textarea>
+            </div>
+            </div>
+         
+           
+       
+
+     
+        <div class="row mb-3">
+          
+          
+        </div>
+        <hr>
+    </div>
+    
+        <!-- <div class="text-center">
+            <button type="submit" class="btn ">Submit For Review</button>
+        </div> -->
+    </form>
+ </div>
+                    
+                 </div>
+                 <!-- <script>
+                    document.querySelector('#btn').addEventListener('click',function(e){
+                        e.preventDefault()
+                        const   button=this;
+                        button.innerHTML='saving...'
+                        setTimeout(function(){
+                            button.innerHTML='saved'
+                            },3000)
+                        setTimeout(function(){
+                          
+                            window.location="/user/dashBord"
+                            },4000)
+                            })
+                 </script> -->
+                 <script>
+                    document.querySelector('form').addEventListener('submit', async function(event) {
+                        event.preventDefault();
+                
+                        const formData = new FormData(this);
+                        console.log("formdata",formData)
+                
+                        try {
+                            const response = await fetch(this.action, {
+                                method: 'POST',
+                                headers: {
+                                   'Content-Type': 'application/json'
+                                 },
+                      body: JSON.stringify(formData)
+                             });
+
+                
+                            if (response.ok) {
+                                alert("Vendor booked  successfully.");
+                                window.location.href = '/admin/vendors';
+                            } else {
+                                let errorMessage;
+                                if (response.status === 400) {
+                                    errorMessage = "Missing required fields. Please fill in all necessary information.";
+                                } else if (response.status === 409) {
+                                    errorMessage = "A vendor with this email already exists. Please use a different email.";
+                                } else {
+                                    errorMessage = "An error occurred while updating the vendor. Please try again later.";
+                                }
+                
+                                alert(errorMessage);
+                            }
+                        } catch (error) {
+                            console.error('Error submitting form:', error);
+                            alert('An unexpected error occurred. Please try again later.');
+                        }
+                    });
+                
+                    </script>
+                
+                 <script src="/jquery/jquery.min.js"></script>
+                 <script src="/bootstrap/dist/js/bootstrap.bundle.js"></script>
+                 <script src="/js/labTech.js"></script>
+
+</body>
+</html>

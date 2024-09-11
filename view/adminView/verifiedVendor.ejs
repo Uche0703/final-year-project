@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>verify Vendor page</title>
+    <link rel="stylesheet" href="/css/skill.css">
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/56adb67a5b.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container"><h2 id="bio">Vendor Bio Data</h2></div>
+    <form id="registrationForm" action="/admin/verify/vendor/<%= vendor._id %>" method="POST" enctype="multipart/form-data">
+        <div class="container wrapp" id="vendorSection">
+            <div class="container text-center">
+                <% if (vendor && vendor.imageType && vendor.profileImage) { %>
+                    <img src="data:<%= vendor.imageType %>;base64,<%= vendor.profileImage %>" alt="Profile Image" style="width: 200px; height: 200px; border-radius: 10px;">
+                <% } else { %>
+                    <p>No image available</p>
+                <% } %>
+                <input type="hidden" name="profileImage" value="<%= vendor.profileImage %>">
+                <input type="hidden" name="imageType" value="<%= vendor.imageType %>">
+            </div>
+            <div class="container">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="first_name" class="form-label">First Name:</label>
+                        <input type="text" class="form-control" id="first_name" name="fName" value="<%= vendor.userRef.fName %>">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="last_name" class="form-label">Last Name:</label>
+                        <input type="text" class="form-control" id="last_name" name="lName" value="<%= vendor.userRef.lName %>">
+
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="email" class="form-label">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" value="<%= vendor.userRef.email %>">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="phone_no" class="form-label">Phone Number:</label>
+                        <input type="text" class="form-control" id="phone_no" name="phone_no" value="<%= vendor.userRef.phone_no %>">
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="p-detail text-center">
+                <h6>*Personal Details</h6>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="address" class="form-label">Office Address/address:</label>
+                    <input type="text" class="form-control" id="address" name="address" value="<%= vendor.address %>">
+                    <input type="text" name="userId" value="<%= vendor.userRef._id %>">user
+                    <input type="text" name="vendorId" value="<%= vendor._id %>">vendor
+                </div>
+                <div class="col-md-4">
+                    <label for="job" class="form-label">Job Title:</label>
+                    <input type="text" class="form-control" id="job" name="job_title" value="<%= vendor.job_title %>">
+                </div>
+                <div class="col-md-4">
+                    <label for="Years_of_experience" class="form-label">Years of Experience:</label>
+                    <select class="form-select" id="Years_of_experience" name="Years_of_experience">
+                        <option value="<%= vendor.Years_of_experience %>" selected><%= vendor.Years_of_experience %></option>
+                        <option value="1-2 years">1-2 years</option>
+                        <option value="3-4 years">3-4 years</option>
+                        <option value="5 years">5 years</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="qualification" class="form-label">Highest Qualification:</label>
+                    <select class="form-select" id="qualification" name="qualification">
+                        <option value="<%= vendor.qualification %>" selected><%= vendor.qualification %></option>
+                        <option value="Skilled Trained">Skilled Trained</option>
+                        <option value="WEAC/NECO/GCE/NABTEP">WEAC/NECO/GCE/NABTEP</option>
+                        <option value="OND/HND">OND/HND</option>
+                        <option value="Bachelor Degree">Bachelor Degree</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="skills_tools" class="form-label">Skills/Tools:</label>
+                    <input type="text" class="form-control" id="skills_tools" name="skills_tools" value="<%= vendor.skills_tools %>">
+                </div>
+                <div class="col-md-4">
+                    <textarea name="bio" id="bio" rows="5" cols="60" class="form-control"><%= vendor.bio %></textarea>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4" style="margin-top: -2rem;">
+                    <label for="date_of_birth" class="form-label">Date of Birth:</label>
+                    <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" value="<%= new Date(vendor.date_of_birth).toISOString().split('T')[0] %>">
+                </div>
+                <div class="col-md-4">
+                    <input class="form-check-input" type="radio" name="verification_status" id="verify" value="Verified" <% if (vendor.verification_status === 'Verified') { %> checked <% } %>>
+                    <label class="form-check-label" for="verify">
+                        Verify Vendor
+                    </label>               
+                </div>
+                <div class="col-md-4">
+                    <input class="form-check-input" type="radio" name="verification_status" id="decline" value="Declined" <% if (vendor.verification_status === 'Declined') { %> checked <% } %>>
+                    <label class="form-check-label" for="decline">Decline</label>         
+                </div>
+            </div>
+            <hr>
+            <div class="text-center btn-div">
+                <button type="submit" class="btn" style="background-color:#b8860B;">Submit</button>
+            </div>
+        </div>
+    </form>
+
+    <script>
+    document.querySelector('form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(this);
+
+        try {
+            const response = await fetch(this.action, {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (response.ok) {
+                alert("Vendor profile updated successfully.");
+                window.location.href = '/admin/vendors';
+            } else {
+                let errorMessage;
+                if (response.status === 400) {
+                    errorMessage = "Missing required fields. Please fill in all necessary information.";
+                } else if (response.status === 409) {
+                    errorMessage = "A vendor with this email already exists. Please use a different email.";
+                } else {
+                    errorMessage = "An error occurred while updating the vendor. Please try again later.";
+                }
+
+                alert(errorMessage);
+            }
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            alert('An unexpected error occurred. Please try again later.');
+        }
+    });
+
+    </script>
+
+    <script src="/jquery/jquery.min.js"></script>
+    <script src="/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <script src="/js/labTech.js"></script>
+</body>
+</html>

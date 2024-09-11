@@ -1,6 +1,10 @@
 {
   "dependencies": {
     "@paystack/inline-js": "^2.20.0",
+<<<<<<< HEAD
+=======
+    "axios": "^1.7.3",
+>>>>>>> ef55d82 (committing workers connect  first time)
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",

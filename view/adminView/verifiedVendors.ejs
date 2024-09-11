@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verified Vendor dashbord</title>
+     <link rel="stylesheet" href="/css/dashbord.css">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <script src="https://kit.fontawesome.com/56adb67a5b.js" crossorigin="anonymous"></script>
+    
+    </head>
+    <body>
+       
+      <div class="nav-sm admin-navSm"  >
+
+        <span style="font-size:30px;cursor:pointer" onclick="openNav()" class="menu-icon">&#9776; </span>
+        <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <h1 style="padding: 10px; font-size: larger;">Health <span id="care" style="color: rgb(0, 255, 119); margin-left: 2rem;"> Care</span></h1>
+    
+            <ul class="nav flex-column cont">
+              
+              <li class="nav-item"><a class="nav-link active" href="#">HOME</a></li>
+              <li class="nav-item"><a class="nav-link active" href="#">Profile</a></li>
+          
+              <li class="nav-item"><a class="nav-link" href="#" id="">Vendors</a></li>
+              <li class="nav-item"><a class="nav-link" href="#" id="#">Booked Vendors</a></li>
+              <li class="nav-item"><a class="nav-link" href="#">Notifications</a></li>
+          </ul>
+          </div>
+    </div>
+      <!-- small screen nav ............................................................. -->
+  <nav class="navbar navbar-expand-lg nav-big" id="navBig" >
+    <div class="container-fluid">
+        <img src="/image/ucogo.png" alt="logo" style="width: 50px; height: 50px; border-radius: 50%;">
+        <div class="notification">    
+            <a class="nav-link" href="#"><i class="fa-regular fa-bell" style="color:rgb(255, 135, 0);"></i>
+            <div id="red">1</div></a>
+        </div>
+        <ul class="nav justify-content-end">
+            <div class="userimg">
+               <img src="" alt="">                </div>
+            <li class="nav-item">
+                <a class="nav-link log-out" href="#">Log out</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+    
+    
+    <div class="container-fluid">
+        <div class="row">
+                    <!-- admin side bar>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+                    <%- include('./includeFolder/adminSideBar') %>
+                    <!-- admin side bar>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+            <div class="col-12 col-md-9 col-lg-10 main-content">
+              
+                
+        </div>
+      
+     
+    
+        <div class="container wrap-table " style="display: noe;">
+            <div class="wrap-txt text-center">
+              <h2 class="text-center"  id="h2">Verified Vendors</h2>
+            </div>
+          <table >
+            <thead>
+              <tr>
+                <th>S/N</th>
+                <th colspan="2" style="padding: 2px;">Full Name</th>
+                <th>Email</th>
+                <th>Phone No</th>
+                <th>Address</th>
+                <th>Job Title</th>
+                <th>Years of Experience</th>
+                <th>Qualification</th>
+                <th>Skills/Tools</th>
+                <th>Bio</th>
+                <th>Verification Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% VerifiedVendor.forEach((vendor, index) => { %>
+                  <tr>
+                      <td><%= index + 1 %></td>
+                      <td colspan="2"><%= vendor.userRef.fName %><%= vendor.userRef.lName %></td>
+                      <td><%= vendor.userRef.email %></td>
+                      <td><%= vendor.userRef.phone_no %></td>
+                      <td><%= vendor.userRefs.address %></td>
+                      <td><%= vendor.userRefs.job_title %></td>
+                      <td><%= vendor.userRefs.Years_of_experience %></td>
+                      <td><%= vendor.userRefs.qualification %></td>
+                      <td><%= vendor.userRefs.skills_tools %></td>
+                      <td><%= vendor.userRefs.bio %></td>
+                      <td style="color: green; font-size: large; font-weight: 600;"><%= vendor.verification_status %></td>
+                      <td><%= new Date(vendor.createdAt).toDateString() %></td>
+                  </tr>
+              <% }); %>
+          </tbody>
+              
+            
+            </table>
+
+          </div>
+        
+    </div>
+    </div>
+   
+    <!-- jQuery library -->
+    <script src="/jquery/jquery.min.js"></script>
+    <!-- Bootstrap JS Bundle (includes Popper) -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
+  
+    <script src="/js/userDashBord.js"></script>
+    <script src="/bootstrap/js/bootstrap.bundle.js"></script>
+    <script>
+        function openNav() {
+          document.getElementById("mySidenav").style.width = "100%";
+          document.getElementById("mySidenav").style.height = "40%";
+          document.getElementById("main").classList.add("open"); // Add class to push down
+        }
+        
+        function closeNav() {
+          document.getElementById("mySidenav").style.width = "0";
+          document.getElementById("main").classList.remove("open"); // Remove class to return to original position
+        }
+        </script> 
+</body>
+</html>

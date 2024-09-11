@@ -1,0 +1,89 @@
+:root{
+    --body-bg: rgba(127,252,212, 0.1) ;
+    --text-bg:orange;
+    --box1-bg:#b8860B;
+    --box2-bg:#DC143c;
+}
+*{
+    margin: 0;
+    padding: 0;
+    outline: none;
+    box-sizing: border-box;
+}
+body{
+    background-color: var(--body-bg)!important;
+  
+}
+.skill-intro{
+
+    margin-top: 5rem;
+    padding: 40px;
+    font-size: large;
+    margin: 10px;
+}
+.skill-intro .wrap-intro-txt  #h3{
+    color: var(--text-bg);
+}
+.skill-intro .wrap-intro-txt h2, #h3{
+    color: var(--text-bg);
+}
+.wlc-img{
+    margin-top: 8rem;
+    padding: 20px;
+    
+}
+.wlc-img img{
+  
+    width: 60vw;
+
+}
+.btn-div{
+    margin: 20px;
+    padding: 10px;
+    font-size: large;
+    color: white;
+}
+.btn-div  .btn{
+    width: 50%;
+    color: white;
+    background-color: var(--box1-bg);
+    padding: 10px;
+    border-radius: 10px;
+   
+}
+/* registration skills  style.................................................................. */
+.row .reg-data{
+    margin-left: 20rem;
+}
+#cont{
+    display: none;
+}
+#cont input{
+    padding: 10px;
+   
+}
+#cont label{
+    padding: 10px;
+    margin: 10px;
+    /* color: var(--text-bg); */
+    font-size: x-large;
+}
+#cont .btn{
+    padding: 10px;
+    width:30%;
+    background-color: var(--box1-bg);
+    font-size: larger;
+    color: white;
+    cursor: pointer;
+
+}
+.image-info .join{
+    background-color: var(--box1-bg);
+    padding: 5px;
+    color: white;
+    cursor: pointer;
+    border-radius: 10px;
+    
+}
+
+/* registration skills  style..................................................................  end */

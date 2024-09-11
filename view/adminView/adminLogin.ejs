@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <script src="https://kit.fontawesome.com/56adb67a5b.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/css/register.css">
+</head>
+<body>
+ 
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card mt-5 login form">
+                <div class="card-header">
+                    <h3 class="text-center">Admin Login Form</h3>
+                </div>
+                <div class="card-body">
+                    <form id="form">
+                        <input type="hidden" id="role" name="role" value="admin">                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" name="email" id="email" class="form-control" required>
+                            <span id="emailError" class="error-message"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" id="psw">Password</label>
+                            <input type="password" name="password" id="password" class="form-control" required>
+                            <span id="pswError" class="error-message"></span>
+                        </div>
+                        <div class="btn-cont text-center mt-5">
+                            <button type="submit" class="btn " id="btn">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Get form and form elements
+    const form = document.getElementById("form");
+    const emailField = document.getElementById("email");
+    const passwordField = document.getElementById("password");
+    const roleField = document.getElementById("role");
+
+    // Ensure elements exist
+    if (!form || !emailField || !passwordField || !roleField) {
+        console.error("One or more form elements are missing or their IDs do not match.");
+        return;  // Exit the script early if elements are not found
+    }
+
+    // Add form submit event listener
+    form.addEventListener("submit", async function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Clear any previous error messages
+        document.getElementById("emailError").textContent = "";
+        document.getElementById("pswError").textContent = "";
+
+        // Get form values
+        const email = emailField.value.trim();
+        const password = passwordField.value.trim();
+        const role = roleField.value;
+
+        // Regex for email and password validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d@$!%*?&<>^.,:;[\]{}()|~`#\-_/\\+=]{8,}$/;
+
+        // Validate email
+        if (!emailRegex.test(email)) {
+            document.getElementById("emailError").textContent = "Invalid email format";
+            return;
+        }
+
+        // Validate password
+        if (!passwordRegex.test(password)) {
+            document.getElementById("pswError").textContent = "Invalid password format";
+            return;
+        }
+
+        // Prepare the data to be sent
+        const loginData = { email, password, role };
+        console.log("log data", loginData);
+
+        try {
+            // Make a POST request to the server
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(loginData)
+            });
+
+            // Handle server response
+            if (response.ok) {
+                // Redirect based on role
+                if (role === "admin") {
+                    window.location.href = '/admin/dashBord';
+                } else if (role === "user") {
+                    window.location.href = '/index/page';
+                }
+            } else {
+                const errorData = await response.json();
+                if (errorData.error === "Invalid email or password") {
+                    document.getElementById("pswError").textContent = "Invalid email or password";
+                } else {
+                    alert(errorData.message || "Login failed");
+                }
+            }
+        } catch (error) {
+            console.error("Error during login:", error);
+            alert("An error occurred. Please try again.");
+        }
+    });
+});
+
+</script>
+
+<script src="/js/login.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
